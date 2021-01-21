@@ -1,5 +1,9 @@
+# set up logging
+import logging
+logging.basicConfig(level=logging.DEBUG)
+
 # system methods
-from system import logging
+import os.path
 from time import sleep
 from signal import pause
 
@@ -15,7 +19,7 @@ button = Button(18, hold_time=2.5)
 led = LED(4)
 
 # set sound variable
-sound = "/home/pi/sounds/mixkit-home-standard-ding-dong-109.wav"
+sound = '~/sounds/disturbence.wav'
 
 def doorbell():
 
@@ -25,17 +29,17 @@ def doorbell():
     button.when_released = button_released
     
     # Listen for events of the button
-    print(f"listening for visitors")
+    logging.info('Listening for visitors')
     pause()
 
 def button_pressed():
-    print("Button was pressed")
+    logging.debug('Button was pressed')
 
     # turn on led to signal the visitor
     led.on()
 
     # play music
-    playsound(sound)
+    play_sound()
 
     # a break to prevent impatient visitors pressing to quickly
     # (playsound blocks the thread, so if a long sound / song adjust the break time accordingly!)
@@ -45,14 +49,29 @@ def button_pressed():
     led.off()
 
 def button_held():
-    print("Button was held")
+    logging.debug('Button was held')
 
 def button_released():
-    print("Button was released")
+    logging.debug('Button was released')
 
+def play_sound():
+
+    # try to play the sound
+    try:
+        playsound(sound)
+        logging.info(f"Sound was played")
+
+    # trow an error if file cant be played
+    except IOError:
+        if os.path.isfile(sound) == True:
+            logging.error(f"Sound file not accessible: {sound}")
+        else:
+            logging.error(f"Sound file is missing: {sound}")
+        
 if __name__ == "__main__":
     
     try:
+        play_sound()
         doorbell()
     finally:
-        print(f"doorbell error!")
+        logging.critical('Doorbell encountered a critical error!')

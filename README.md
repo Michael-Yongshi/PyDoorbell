@@ -7,6 +7,13 @@ install pip
 sudo apt install python3-pip
 ```
 
+NOTE:
+if using raspbian OS, there are missing python sound bindings
+install gst sound bindings to enable playsound
+```
+sudo apt install python3-gst-1.0
+```
+
 ### dependencies
 install requirements
 ```
