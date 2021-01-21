@@ -7,13 +7,6 @@ install pip
 sudo apt install python3-pip
 ```
 
-NOTE:
-if using raspbian OS, there are missing python sound bindings
-install gst sound bindings to enable playsound
-```
-sudo apt install python3-gst-1.0
-```
-
 ### dependencies
 install requirements
 ```
@@ -25,6 +18,13 @@ or run the requirements file
 pip3 install -r requirements.txt
 ```
 
+NOTE:
+if using raspbian OS, there are missing python sound bindings
+install gst sound bindings to enable playsound
+```
+sudo apt install python3-gst-1.0
+```
+
 ### copy repo
 copy files from other pc (or install git and clone the repo)
 ```
@@ -32,7 +32,7 @@ scp pc:~/Doorbell/* ~/
 ```
 
 ### systemd script
-on the pi, mv the service to systemd
+on the pi, mv the service file to systemd
 ```
 sudo mv ~/doorbell.service /etc/systemd/system/
 ```
@@ -54,3 +54,5 @@ sound = "/home/pi/sounds/soundfile.wav"
 ```
 
 ## Licence
+GNU GENERAL PUBLIC LICENSE
+Version 3, 29 June 2007
