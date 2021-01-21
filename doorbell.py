@@ -62,16 +62,18 @@ def play_sound():
         logging.info(f"Sound was played")
 
     # trow an error if file cant be played
-    except IOError:
+    except:
+        logging.error(f"Sound couldn't be played")
+
+        # Check if sound file exists
         if os.path.isfile(sound) == True:
             logging.error(f"Sound file not accessible: {sound}")
         else:
             logging.error(f"Sound file is missing: {sound}")
         
 if __name__ == "__main__":
-    
+
     try:
-        play_sound()
         doorbell()
     finally:
         logging.critical('Doorbell encountered a critical error!')
