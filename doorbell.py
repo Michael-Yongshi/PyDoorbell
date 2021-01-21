@@ -1,22 +1,21 @@
-# -*- coding: utf-8 -*-
-# Input-output and time function for delay, audio library and system commands
+# system methods
+from system import logging
 from time import sleep
-from os import system
-import logging
+from signal import pause
 
 # for handling the GPIO connections
 from gpiozero import LED, Button
-from signal import pause
 
 # for sounds
 from playsound import playsound
 
-# set GPIO connection used for the button (with hold time) and led
+
+# set GPIO connection variables used for the button (with hold time) and led
 button = Button(18, hold_time=2.5)
 led = LED(4)
 
-# set sound
-sound = "/home/pi/mixkit doorbell sounds/mixkit-home-standard-ding-dong-109.wav"
+# set sound variable
+sound = "/home/pi/sounds/mixkit-home-standard-ding-dong-109.wav"
 
 def doorbell():
 
