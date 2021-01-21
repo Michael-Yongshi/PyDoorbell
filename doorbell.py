@@ -15,6 +15,9 @@ from playsound import playsound
 button = Button(18, hold_time=2.5)
 led = LED(4)
 
+# set sound
+sound = "/home/pi/mixkit doorbell sounds/mixkit-home-standard-ding-dong-109.wav"
+
 def doorbell():
 
     # set the functions to be run by the button
@@ -33,7 +36,7 @@ def button_pressed():
     led.on()
 
     # play music
-    playsound('myfile.wav')
+    playsound(sound)
 
     # a break to prevent impatient visitors pressing to quickly
     # (playsound blocks the thread, so if a long sound / song adjust the break time accordingly!)
