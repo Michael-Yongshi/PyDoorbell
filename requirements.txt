@@ -2,7 +2,7 @@
 # function tools
 rpi.gpio
 gpiozero
-playsound
+simpleaudio
 
 # buildtools
 

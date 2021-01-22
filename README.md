@@ -19,10 +19,9 @@ pip3 install -r requirements.txt
 ```
 
 NOTE:
-if using raspbian OS, there are missing python sound bindings
-install gst sound bindings to enable playsound
+On ubuntu there is a missing dependency for simpleaudio
 ```
-sudo apt install python3-gst-1.0
+sudo pip3 install -y python3-dev libasound2-dev
 ```
 
 ### copy repo

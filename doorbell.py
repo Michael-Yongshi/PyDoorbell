@@ -11,15 +11,14 @@ from signal import pause
 from gpiozero import LED, Button
 
 # for sounds
-from playsound import playsound
-
+import simpleaudio
 
 # set GPIO connection variables used for the button (with hold time) and led
-button = Button(18, hold_time=2.5)
-led = LED(4)
+button = Button(4, hold_time=2.5)
+led = LED(18)
 
 # set sound variable
-sound = '~/sounds/disturbence.wav'
+sound = simpleaudio.WaveObject.from_wave_file('/home/pi/sounds/mixkit-home-standard-ding-dong-109.wav')
 
 def doorbell():
 
@@ -28,37 +27,51 @@ def doorbell():
     button.when_held = button_held
     button.when_released = button_released
     
-    # Listen for events of the button
-    logging.info('Listening for visitors')
+    logging.debug('Doorbell program is initiated')
     pause()
 
 def button_pressed():
     logging.debug('Button was pressed')
 
     # turn on led to signal the visitor
-    led.on()
+    led_on()
 
     # play music
     play_sound()
 
     # a break to prevent impatient visitors pressing to quickly
-    # (playsound blocks the thread, so if a long sound / song adjust the break time accordingly!)
-    sleep(10.0)
+    time = 10
+    logging.debug(f'Going to sleep for {time} second')
+    sleep(time)
 
     # turn off led to signal the visitor ringing has ended
-    led.off()
+    led_off()
 
 def button_held():
     logging.debug('Button was held')
 
 def button_released():
-    logging.debug('Button was released')
+
+    # Signal that program is continuing to listen to events
+    logging.info('Listening for visitors')
+
+def led_on():
+
+    led.on()
+    logging.debug('Led is turned on')
+
+def led_off():
+
+    led.off()
+    logging.debug('Led is turned off')
 
 def play_sound():
 
     # try to play the sound
     try:
-        playsound(sound)
+        logging.info(f'Sound is playing')
+        play_obj = sound.play()
+        play_obj.wait_done()
         logging.info(f"Sound was played")
 
     # trow an error if file cant be played
@@ -73,7 +86,8 @@ def play_sound():
         
 if __name__ == "__main__":
 
-    try:
-        doorbell()
-    finally:
-        logging.critical('Doorbell encountered a critical error!')
+    doorbell()
+    # try:
+    #     doorbell()
+    # finally:
+    #     logging.critical('Doorbell encountered a critical error!')
