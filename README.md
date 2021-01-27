@@ -52,6 +52,11 @@ change the sound variable accordingly in doorbell.py
 sound = "/home/pi/sounds/soundfile.wav"
 ```
 
+## Tested
+Only test on 
+Hardware: Raspberry Pi 2b
+OS:Raspbian Buster 
+
 ## Licence
 GNU GENERAL PUBLIC LICENSE
 Version 3, 29 June 2007
