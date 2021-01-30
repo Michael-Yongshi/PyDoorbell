@@ -37,6 +37,9 @@ def button_pressed():
     # turn on led to signal the visitor
     led_on()
 
+    # emit the event to Home Assistant
+    emit_event()
+
     # play music
     play_sound()
 
@@ -47,9 +50,6 @@ def button_pressed():
 
     # turn off led to signal the visitor ringing has ended
     led_off()
-
-    # lets wait for the end of the program to try to emit the hass event
-    emit_event()
 
 def button_held():
     logging.debug('Button was held')
