@@ -4,6 +4,7 @@ logging.basicConfig(level=logging.DEBUG)
 
 # system methods
 import os.path
+import requests
 from time import sleep
 from signal import pause
 
@@ -47,6 +48,14 @@ def button_pressed():
     # turn off led to signal the visitor ringing has ended
     led_off()
 
+    # lets wait for the end of the program to try to emit the hass event
+    try:
+        emit_hass_event()
+        logging.debug('Send event to home assistant')
+
+    except:
+        logging.debug('Couldnt send event to home assistant')
+
 def button_held():
     logging.debug('Button was held')
 
@@ -83,7 +92,24 @@ def play_sound():
             logging.error(f"Sound file not accessible: {sound}")
         else:
             logging.error(f"Sound file is missing: {sound}")
-        
+
+def emit_hass_event():
+
+    # default address for the rest api in default settings
+    url = "http://homeassistant:8123/api/events/DOORBELL_PRESSED"
+
+    # send the authorization token (long lived tokens in settings) and denote that we are sending data in the form of a json string
+    token = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJkYWZjMWZhOTdiNzQ0N2MzYTdkMGM0NTZiOGI5MGY3NiIsImlhdCI6MTYxMjAxMTk3MiwiZXhwIjoxOTI3MzcxOTcyfQ.yKc0kqTgX5FCVbnP85pCw9bsWD-bKYkxBlXnUzNfxt8"
+    headers = {
+        "Authorization": f"Bearer {token}",
+        "content-type": "application/json",
+    }
+
+    # send out the actual request to the api
+    response = requests.post(url=url, headers=headers)
+
+    print(response.text)
+
 if __name__ == "__main__":
 
     doorbell()
