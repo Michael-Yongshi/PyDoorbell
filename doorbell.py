@@ -1,25 +1,29 @@
-# set up logging
-import logging
-logging.basicConfig(level=logging.DEBUG)
-
-# system methods
 import os.path
-import requests
+from datetime import datetime
 from time import sleep
 from signal import pause
-
-# for handling the GPIO connections
+import logging
+import requests
 from gpiozero import LED, Button
-
-# for sounds
 import simpleaudio
 
-# set GPIO connection variables used for the button (with hold time) and led
+
+# set up logging
+logging.basicConfig(level=logging.DEBUG)
+
+# for handling the api connections
+token_filepath = os.path.join(os.path.expanduser('~'), '.ssh', 'Home_API_Token')
+
+# for handling the GPIO connections
 button = Button(4, hold_time=2.5)
 led = LED(18)
 
 # set sound variable
-sound = simpleaudio.WaveObject.from_wave_file('/home/pi/sounds/mixkit-home-standard-ding-dong-109.wav')
+sound_filepath = os.path.join(os.path.expanduser('~'), 'sounds', 'mixkit-home-standard-ding-dong-109.wav')
+
+# Define delay to wait before continuing after activation
+delay = 5
+
 
 def doorbell():
 
@@ -32,10 +36,13 @@ def doorbell():
     pause()
 
 def button_pressed():
-    logging.debug('Button was pressed')
+
+    # get current time and log
+    current_time = datetime.now()
+    logging.debug(f'Button was pressed at {current_time}')
 
     # emit the event to Home Assistant
-    emit_event()
+    emit_event(current_time)
 
     # turn on led to signal the visitor
     led_on()
@@ -44,7 +51,6 @@ def button_pressed():
     play_sound()
 
     # a break to prevent impatient visitors pressing to quickly
-    delay = 10
     logging.debug(f'Going to sleep for {delay} seconds')
     sleep(delay)
 
@@ -71,6 +77,9 @@ def led_off():
 
 def play_sound():
 
+    # Import sound file in simpleaudio object
+    sound = simpleaudio.WaveObject.from_wave_file(sound_filepath)
+
     # try to play the sound
     try:
         logging.info(f'Sound is playing')
@@ -84,31 +93,48 @@ def play_sound():
 
         # Check if sound file exists
         if os.path.isfile(sound) == True:
-            logging.error(f"Sound file not accessible: {sound}")
+            logging.error(f"Sound file exists but couldnt be played: {sound}")
         else:
             logging.error(f"Sound file is missing: {sound}")
 
-def emit_event():
+def emit_event(current_time):
+    """
+    Emits a DOORBELL_PRESSED event.
+    
+    Needs an API authorisation token in order to send the post request to Home Assistant.
+    This can be obtained under settings at the bottom at 'long lived tokens'
+    By default this code looks at the users .ssh folder for a '
+    """
 
     try:
+
         # default address for the rest api in default settings
         url = "http://homeassistant:8123/api/events/DOORBELL_PRESSED"
 
-        # send the authorization token (long lived tokens in settings) and denote that we are sending data in the form of a json string
-        token = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJkYWZjMWZhOTdiNzQ0N2MzYTdkMGM0NTZiOGI5MGY3NiIsImlhdCI6MTYxMjAxMTk3MiwiZXhwIjoxOTI3MzcxOTcyfQ.yKc0kqTgX5FCVbnP85pCw9bsWD-bKYkxBlXnUzNfxt8"
+        # open file with the api token
+        with open(token_filepath, "r") as text_file:
+            token = text_file.read().strip("\n")
+
+        # send the authorization token and denote that we are sending data in the form of a json string
         headers = {
             "Authorization": f"Bearer {token}",
             "content-type": "application/json",
         }
 
+        json = {
+            "time": f"{current_time}",
+        }
+
         # send out the actual request to the api
-        response = requests.post(url=url, headers=headers)
+        response = requests.post(url=url, headers=headers, json=json)
 
         logging.debug('Send event to home assistant')
+        logging.debug(f"url {url}, headers {headers}, json {json}")
         logging.debug(f"response: {response.text}")
         
     except:
         logging.debug('Couldnt send event to home assistant')
+
 
 if __name__ == "__main__":
 
