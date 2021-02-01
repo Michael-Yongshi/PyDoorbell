@@ -1,5 +1,5 @@
 # PyDoorbell
-Stand alone doorbell script to play a sound whenever a button input is received (and lights a led to signal button pressed)
+Standalone doorbell script to play a sound whenever a button input is received (and lights a led to signal button pressed) and add a delay to prevent impatient visitors to ring the doorbell in quick succession
 
 ## How to
 ### install a raspbian pi
