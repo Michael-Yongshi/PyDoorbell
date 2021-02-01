@@ -34,13 +34,13 @@ def doorbell():
 def button_pressed():
     logging.debug('Button was pressed')
 
-    # turn on led to signal the visitor
-    led_on()
-
     # emit the event to Home Assistant
     emit_event()
 
-    # play music
+    # turn on led to signal the visitor
+    led_on()
+
+    # play sound
     play_sound()
 
     # a break to prevent impatient visitors pressing to quickly

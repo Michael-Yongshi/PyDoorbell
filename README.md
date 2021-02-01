@@ -9,12 +9,8 @@ sudo apt install python3-pip
 ```
 
 ### dependencies
-install requirements
-```
-pip3 install playsound && pip3 install gpiozero && pip3 install rpi.gpio
-```
-
-or run the requirements file
+### dependencies
+install requirements through the requirements file
 ```
 pip3 install -r requirements.txt
 ```
@@ -28,7 +24,7 @@ sudo pip3 install -y python3-dev libasound2-dev
 ### copy repo
 copy files from other pc (or install git and clone the repo)
 ```
-scp pc:~/Doorbell/* ~/
+scp pc:~/PyDoorbell/* ~/
 ```
 
 ### systemd script
