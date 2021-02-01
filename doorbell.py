@@ -44,9 +44,9 @@ def button_pressed():
     play_sound()
 
     # a break to prevent impatient visitors pressing to quickly
-    time = 10
-    logging.debug(f'Going to sleep for {time} second')
-    sleep(time)
+    delay = 10
+    logging.debug(f'Going to sleep for {delay} seconds')
+    sleep(delay)
 
     # turn off led to signal the visitor ringing has ended
     led_off()
